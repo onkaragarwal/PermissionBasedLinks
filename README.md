@@ -43,7 +43,7 @@ Fill in details.
 
 Click Add.Item will be visible in table.Once all items are added then you need to click on **Save** in the manage link to save the data in webpart properties otherwise data will be lost once you go out of page.
 
-![Image of table](https://github.com/onkaragarwal/PermissionBasedLinks/blob/master/image/link%20table.png)
+![Image of table](https://github.com/onkaragarwal/PermissionBasedLinks/blob/master/image/links.png)
 
 For editing and deleting right click on element and contextual menu will appear.
 
