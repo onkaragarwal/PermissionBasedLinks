@@ -1,6 +1,6 @@
 ## button-quick-links
 
-This is where you include your WebPart documentation.
+This webpart shows button based links based on permission. The concept is similar to existing quick links webparts but this is based on permission and is restriced to only button based layout.
 
 ### Building the code
 
