@@ -1,0 +1,81 @@
+@import "~@fluentui/react/dist/sass/_References.scss";
+
+
+
+.permissionBasedLinks {
+ 
+  :global {
+    .ms-List-cell {
+      display: inline-block;
+      position: relative;
+      vertical-align: top;
+    }
+    .ms-DocumentCard {
+      height: inherit !important;
+      min-width: initial;
+      max-width: initial;
+      width: 100%;
+    }
+    .ms-DocumentCardTitle {
+      line-height: 20px;
+      padding-bottom: 5px;
+      height: auto;
+      @include ms-fontColor-white;
+      padding-left: 0px;
+      padding-right: 5px;
+    }
+    .ms-DocumentCardDetails {
+      justify-content: flex-start;
+    }
+    .ms-DocumentCardPreview {
+      border: none;
+    }
+  }
+
+  .container {
+    margin: 0px auto;
+  }
+
+  .row {
+    @include ms-Grid-row;
+    @include ms-fontColor-white;
+    padding: 20px;
+  }
+
+  .column {
+    @include ms-Grid-col;
+    @include ms-lg10;
+    @include ms-xl8;
+    @include ms-xlPush2;
+    @include ms-lgPush1;
+  }
+
+  .title {
+    @include ms-font-xl;
+    @include ms-fontColor-white;
+  }
+
+  .subTitle {
+    @include ms-font-l;
+    @include ms-fontColor-white;
+  }
+
+  .description {
+    @include ms-font-l;
+    @include ms-fontColor-white;
+  }
+  .btnLinkDescriptionWrapper {
+    font-size: 14px;
+    line-height: 19px;
+    font-weight: 400;
+    padding-bottom: 8px;
+    padding-left: 0px;
+    padding-right: 5px;
+  }
+  .btnLinkDescriptionTitle {
+    overflow: hidden;
+  }
+  .btnLinksDiv {
+    width: initial;
+  }
+}
