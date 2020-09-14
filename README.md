@@ -17,10 +17,11 @@ This package produces the following:
 * dist/* - the bundled script, along with other resources
 * deploy/* - all resources which should be uploaded to a CDN.
 
-### Build options
+After build create the package by running below commands
 
-gulp clean - TODO
-gulp test - TODO
-gulp serve - TODO
-gulp bundle - TODO
-gulp package-solution - TODO
+```bash
+git bundle --ship
+gulp package-solution --ship
+```
+
+Deploy the solution to appcatalog
