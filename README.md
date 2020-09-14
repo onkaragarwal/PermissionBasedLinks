@@ -17,13 +17,20 @@ This package produces the following:
 * dist/* - the bundled script, along with other resources
 * deploy/* - all resources which should be uploaded to a CDN.
 
-After build create the package by running below commands
+After downloading the package run the below command to  get the packages.
 
 ```bash
-git bundle --ship
+npm install
+```
+Run the below command to build the project.
+```bash
+gulp build
+```
+once the package is build run the below command to bundle and package
+```bash
+gulp bundle --ship
 gulp package-solution --ship
 ```
-
 Deploy the solution to appcatalog and add it on the site.
 Add it on the page and edit the webpart.Following panel will open.
 
