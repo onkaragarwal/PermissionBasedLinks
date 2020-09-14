@@ -1,7 +1,7 @@
 ## button-quick-links
 
 This webpart shows button based links based on permission. The concept is similar to existing quick links webparts but this is based on permission and is restriced to only button based layout.
-![Image of Quick links](/image/Quick Links.PNG)
+![Image of Quick links](/image/Quick%20Links.PNG)
 ### Building the code
 
 ```bash
@@ -25,7 +25,8 @@ gulp package-solution --ship
 ```
 
 Deploy the solution to appcatalog and add it on the site.
-Add it on the page and edit the webpart.Following panel will open
+Add it on the page and edit the webpart.Following panel will open.
+
 ![Image of edit page](/image/editpage.PNG)
 
 Click on **Manage Links** button.Empty panel opens up.
