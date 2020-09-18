@@ -35,6 +35,12 @@ export class UserServices {
   }
 
   private getFilteredLinks(linkColl: IItemObject[], groupColl: any[]) {
+    if(!linkColl){
+      return {
+        links: [],
+        message: "Create links to display",
+      };
+    }
     let coll = linkColl.filter((o1) => {
       if (o1.targetgroup && o1.targetgroup.length > 0) {
         if (groupColl && groupColl.length > 0) {

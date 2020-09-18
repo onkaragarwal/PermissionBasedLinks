@@ -13,6 +13,9 @@ import {
   Stack,
   MessageBar,
   MessageBarType,
+  Spinner,
+  SpinnerSize,
+  SpinnerLabelPosition,
 } from "@fluentui/react";
 import { IconPicker } from "@pnp/spfx-controls-react/lib/IconPicker";
 import { IItemObject } from "../Common/IItemObject";
@@ -20,6 +23,7 @@ import {
   PeoplePicker,
   PrincipalType,
 } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import { DirectoryService } from "../Services/DirectoryService";
 
 export interface ICustomPropertyPaneFormProps {
   isNew: boolean;
@@ -27,7 +31,7 @@ export interface ICustomPropertyPaneFormProps {
   panelOpen: boolean;
   formSave(item: IItemObject): void;
   closePanel(): void;
-  context:any;
+  context: any;
 }
 interface ICustomPropertyPaneFormState {
   icon: string;
@@ -35,9 +39,10 @@ interface ICustomPropertyPaneFormState {
   url: string;
   selectedKey: string;
   errorMessage: string;
-  targetAudience:any[];
-  targetAudienceStringColl:string[];
-  description:string;
+  targetAudience: any[];
+  targetAudienceStringColl: string[];
+  description: string;
+  peoplePickerDisabled: boolean;
 }
 const TargetOptions = [
   { key: "_blank", text: "Blank" },
@@ -56,35 +61,68 @@ export class CustomPropertyPaneForm extends React.Component<
       url: "",
       selectedKey: "_blank",
       errorMessage: "",
-      targetAudience:undefined,
-      targetAudienceStringColl:[],
-      description:""
+      targetAudience: undefined,
+      targetAudienceStringColl: [],
+      description: "",
+      peoplePickerDisabled: false,
     };
   }
 
   public componentDidMount() {
     if (!this.props.isNew) {
-      var userColl=undefined;
-      if(this.props.formData.targetgroup){
-        userColl=this.props.formData.targetgroup.map(x=>{
-          let splitColl=x["loginName"].split("|");
-          let text=splitColl[2];
-          if(text.indexOf("@")<1){
-            text=x["text"];
-          }
-         
-          return text;
-        });
-      }
-      this.setState({
+      let dataState = {
         icon: this.props.formData.iconname,
         title: this.props.formData.title,
         url: this.props.formData.url,
         selectedKey: this.props.formData.target,
-        targetAudience:this.props.formData.targetgroup,
-        targetAudienceStringColl:userColl,
-        description:this.props.formData.description
-      });
+        description: this.props.formData.description,
+        targetAudience: this.props.formData.targetgroup,
+      };
+      let idColl = [];
+      var userColl = undefined;
+      if (this.props.formData.targetgroup) {
+        userColl = this.props.formData.targetgroup.map((x) => {
+          let splitColl = x["loginName"].split("|");
+          let text = splitColl[2];
+          if (text.indexOf("@") < 1) {
+            if (x["secondaryText"] == "FederatedDirectoryClaimProvider") {
+              idColl.push(text);
+              text = "";
+            } else {
+              text = x["text"];
+            }
+          }
+          return text;
+        });
+      }
+      if (idColl.length > 0) {
+        let dServices = new DirectoryService(this.props.context);
+        userColl = userColl.filter((x) => x != "");
+        dataState["peoplePickerDisabled"] = true;
+        dServices
+          .getNameOrEmail(idColl)
+          .then((result: string[]) => {
+            if (result.length > 0) {
+              userColl.push(...result);
+            }
+            this.setState({ 
+              targetAudienceStringColl:userColl,
+              peoplePickerDisabled:false,
+             });
+            
+          })
+          .catch((err) => {
+            this.setState({ 
+              targetAudienceStringColl:userColl,
+              peoplePickerDisabled:false,
+              
+             });
+          });
+      } else {
+        dataState["targetAudienceStringColl"] = userColl;
+      }
+
+      this.setState({ ...dataState });
     }
   }
 
@@ -105,8 +143,8 @@ export class CustomPropertyPaneForm extends React.Component<
       url: this.state.url,
       iconname: this.state.icon,
       target: this.state.selectedKey,
-      targetgroup:this.state.targetAudience,
-      description:this.state.description
+      targetgroup: this.state.targetAudience,
+      description: this.state.description,
     };
     this.props.formSave(obj);
   }
@@ -117,7 +155,7 @@ export class CustomPropertyPaneForm extends React.Component<
   private _getPeoplePickerItems(pitems: any[]) {
     console.log("Items:", pitems);
     this.setState({
-      targetAudience:pitems
+      targetAudience: pitems,
     });
   }
   public render(): JSX.Element {
@@ -143,10 +181,11 @@ export class CustomPropertyPaneForm extends React.Component<
             });
           }}
         />
-         <TextField
+        <TextField
           label="Description"
           value={this.state.description}
-          multiline rows={3}
+          multiline
+          rows={3}
           onChange={(evt, newValue) => {
             this.setState({
               description: newValue,
@@ -177,8 +216,16 @@ export class CustomPropertyPaneForm extends React.Component<
           showHiddenInUI={false}
           personSelectionLimit={5}
           defaultSelectedUsers={this.state.targetAudienceStringColl}
+          disabled={this.state.peoplePickerDisabled}
           //ensureUser={true}
         />
+        {this.state.peoplePickerDisabled && (
+          <Spinner
+            size={SpinnerSize.xSmall}
+            label="loading.."
+            labelPosition={"right"}
+          />
+        )}
         <Dropdown
           label="Target"
           options={TargetOptions}
